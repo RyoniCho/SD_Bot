@@ -1,6 +1,7 @@
 import telegramMessage
 import sdapi
 import sys
+import requests
 
 RESPONSE_MAKE_START=1
 RESPONSE_EXIT=2
@@ -159,17 +160,21 @@ def Start_Make_SD(message):
    
 
 if __name__ == '__main__':
+    try:
+        cachedPayload=defaultPayload.copy()
 
-    cachedPayload=defaultPayload.copy()
-
-    # SetParam("enable_hr","true")
-    # del defaultPayload["alwayson_scripts"]
-    # print(defaultPayload)
+        # SetParam("enable_hr","true")
+        # del defaultPayload["alwayson_scripts"]
+        # print(defaultPayload)
 
 
-    mg = telegramMessage.message()
-    mg.send_message(f"SD봇이 시작되었습니다.\n{helpText}")
-  
+        mg = telegramMessage.message()
+        mg.send_message(f"SD봇이 시작되었습니다.\n{helpText}")
+    
 
-    botUpdate(mg)
+        botUpdate(mg)
+    except requests.exceptions.ConnectionError as e:
+        print(e)
+        if mg is not None:
+            mg.send_message("Connection Error발생. 봇이 종료됩니다.")
    
