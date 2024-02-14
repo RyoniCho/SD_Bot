@@ -47,7 +47,7 @@ class message:
     def RequestTelegramBot(self,url):
 
         try:
-            response = requests.get(url,verify=False)
+            response = requests.get(url)
             content = response.content.decode("utf8")
             #print("Request Telegram: "+content)
         except Exception as e:
