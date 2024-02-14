@@ -45,9 +45,16 @@ class message:
         return response.json()
 
     def RequestTelegramBot(self,url):
-        response = requests.get(url,verify=False)
-        content = response.content.decode("utf8")
-        #print("Request Telegram: "+content)
+
+        try:
+            response = requests.get(url,verify=False)
+            content = response.content.decode("utf8")
+            #print("Request Telegram: "+content)
+        except Exception as e:
+           
+            print(f"Request error: {e}")
+            content=None
+
         return content
 
     def GetUpdates(self):
@@ -57,7 +64,11 @@ class message:
 
     def GetJsonResultFromRequest(self,url):
         content = self.RequestTelegramBot(url)
-        js = json.loads(content)
+        if content is not None:
+            js = json.loads(content)
+        else:
+            js = None
+
         return js
 
     def get_last_chat_id_and_text(self,updates):
@@ -73,7 +84,11 @@ class message:
 
     def CheckMessageInLoop(self):
         time.sleep(1)
-        text,chat_id,msg_id = self.get_last_chat_id_and_text(self.GetUpdates())
+        updateRes=self.GetUpdates()
+        if updateRes is not None:
+            text,chat_id,msg_id = self.get_last_chat_id_and_text(updateRes)
+        else:
+            return (0,"")
         
         if msg_id in self.msgSet:
             return (0,"")
